@@ -62,4 +62,17 @@ the Farm by id. And the method `fetchItem` may return just farmId instead of ful
 farm info. And the `fetchFarm` can return the full farm info. Anyway, your client
 will have to join the information from `fetchItemBufferOne` and `fetchItemBufferTwo`
 why not to make the information split based on the separation of concerns, not on
-number of the Item properties, that fits to the IDE screen? Related to above questuin.
+number of the Item properties, that fits to the IDE screen? Related to above question.
+
+8. Interesting note. The major problem is the authenticity of the Farm. I can register
+any farm with any location without actually owning it. The transactions in the Etherium 
+blockchain afterwards only record the hops. It is still useful, b/c I can track the
+number of hops and even price changes due to logistics. But, but, it has nothing to
+do with authenticity of the Item that travels along the supply chain. Why shall I trust 
+the guy, who registered the Item with the Wine Farm from New Zealand, if I can do the 
+same sitting here in Moscow without actually owning the Wine Farm?
+Why shall I trust the guy hitting the "Pressed" button for Wine Grape of the Bottle, that
+I'm going to buy, if I can press this button too? It is important for the Consumer
+to know, what happened with the Wine Grape. How long was it fermented, or when it was 
+harvested. But this information is hard to get reliably. And Etherium does not solve this
+problem.
