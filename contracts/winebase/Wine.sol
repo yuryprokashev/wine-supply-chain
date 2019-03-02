@@ -3,7 +3,8 @@ pragma solidity ^0.4.24;
 contract Wine {
     address contractOwner;
     uint lastGrapeId;
-    uint lastBottleId;
+    uint lastBottleUpc;
+    uint lastBottleSku;
     uint lastFarmId;
 
     struct Location {
@@ -36,7 +37,9 @@ contract Wine {
 
     enum BottleState {Owned, ForSale, Sold, Shipped, Consumed}
     struct BottleOfWine {
-        uint sku; // id of the Bottle
+        uint upc; // universal product code of the Bottle - the primary key
+        uint sku; // stock keeping id - I have no idea, why do we have it, if contract does not use it
+        uint productId; // product id is upc + sku - again, I have no idea, why do we have it, if contract does not use it
         WineGrape grape;
         uint price;
         BottleState state;
@@ -44,11 +47,11 @@ contract Wine {
         address owner; // it will replace odd seller and buyer properties of the Bottle
     }
     mapping (uint => BottleOfWine) bottles;
-    event BottleOwned(uint sku);
-    event BottleForSale(uint sku);
-    event BottleSold(uint sku);
-    event BottleShipped(uint sku);
-    event BottleConsumed(uint sku);
+    event BottleOwned(uint upc);
+    event BottleForSale(uint upc);
+    event BottleSold(uint upc);
+    event BottleShipped(uint upc);
+    event BottleConsumed(uint upc);
 
     modifier verifyCallerIs(address _address){
         require(msg.sender == _address, "Current caller can not invoke this operation.");
@@ -70,13 +73,13 @@ contract Wine {
         _;
     }
 
-    modifier bottleExists(uint _sku) {
-        require(bottles[_sku].sku > 0, "Bottle with given SKU does not exists.");
+    modifier bottleExists(uint _upc) {
+        require(bottles[_upc].upc > 0, "Bottle with given UPC does not exists.");
         _;
     }
 
-    modifier verifyBottleState(uint _sku, BottleState _state) {
-        require(bottles[_sku].state == _state, "Current bottle state forbids this operation");
+    modifier verifyBottleState(uint _upc, BottleState _state) {
+        require(bottles[_upc].state == _state, "Current bottle state forbids this operation");
         _;
     }
 
@@ -90,17 +93,17 @@ contract Wine {
         _;
     }
 
-    modifier returnChangeForExcess(uint _sku) {
+    modifier returnChangeForExcess(uint _upc) {
         _;
-        uint _price = bottles[_sku].price;
+        uint _price = bottles[_upc].price;
         uint change = msg.value - _price;
-        bottles[_sku].buyer.transfer(change);
+        bottles[_upc].buyer.transfer(change);
     }
 
     constructor() public {
         contractOwner = msg.sender;
         lastGrapeId = 0;
-        lastBottleId = 0;
+        lastBottleUpc = 0;
         lastFarmId = 0;
     }
 
@@ -114,7 +117,7 @@ contract Wine {
     }
 
     // Grapes Transactions
-    function harvestGrape(string _name, uint _vintageYear, uint farmId) public
+    function harvestGrape(string _name, uint _vintageYear, string notes, uint farmId) public
     verifyCallerIs(contractOwner) {
         lastGrapeId = lastGrapeId + 1;
         grapes[lastGrapeId] = WineGrape(
@@ -164,83 +167,90 @@ contract Wine {
     grapeExists(_grapeId)
     verifyGrapeState(_grapeId, GrapeState.Fermented)
     verifyCallerIs(grapes[_grapeId].owner)   {
-        lastBottleId = lastBottleId + 1;
-        bottles[lastBottleId] = BottleOfWine(
-            {grape: grapes[_grapeId], sku: lastBottleId, price: 0, state: BottleState.Owned, owner: msg.sender, buyer: 0}
+        lastBottleUpc = lastBottleUpc + 1;
+        bottles[lastBottleUpc] = BottleOfWine(
+            {grape: grapes[_grapeId],
+            upc: lastBottleUpc,
+            sku: lastBottleSku,
+            productId: lastBottleSku + lastBottleUpc, // it's odd, but i have to return productId b/c of project requirements
+            price: 0,
+            state: BottleState.Owned,
+            owner: msg.sender,
+            buyer: 0}
         );
-        emit BottleOwned(bottles[lastBottleId].sku);
+        emit BottleOwned(bottles[lastBottleUpc].upc);
     }
 
-    function addBottleForSale(uint _sku, uint _price) public
-    bottleExists(_sku)
-    verifyBottleState(_sku, BottleState.Owned)
+    function addBottleForSale(uint _upc, uint _price) public
+    bottleExists(_upc)
+    verifyBottleState(_upc, BottleState.Owned)
     priceNotZero(_price)
-    verifyCallerIs(bottles[_sku].owner)  {
-        bottles[_sku].price = _price;
-        bottles[_sku].state = BottleState.ForSale;
-        emit BottleForSale(_sku);
+    verifyCallerIs(bottles[_upc].owner)  {
+        bottles[_upc].price = _price;
+        bottles[_upc].state = BottleState.ForSale;
+        emit BottleForSale(_upc);
     }
 
-    function buyBottle(uint _sku) public payable
-    bottleExists(_sku)
-    verifyBottleState(_sku, BottleState.ForSale)
-    verifyCallerIsNot(bottles[_sku].owner)
-    isPaidEnough(bottles[_sku].price)
-    returnChangeForExcess(_sku) {
-        bottles[_sku].buyer = msg.sender;
-        bottles[_sku].state = BottleState.Sold;
-        bottles[_sku].owner.transfer(bottles[_sku].price);
-        emit BottleSold(_sku);
+    function buyBottle(uint _upc) public payable
+    bottleExists(_upc)
+    verifyBottleState(_upc, BottleState.ForSale)
+    verifyCallerIsNot(bottles[_upc].owner)
+    isPaidEnough(bottles[_upc].price)
+    returnChangeForExcess(_upc) {
+        bottles[_upc].buyer = msg.sender;
+        bottles[_upc].state = BottleState.Sold;
+        bottles[_upc].owner.transfer(bottles[_upc].price);
+        emit BottleSold(_upc);
     }
 
-    function shipBottle(uint _sku) public
-    bottleExists(_sku)
-    verifyBottleState(_sku, BottleState.Sold)
-    verifyCallerIs(bottles[_sku].owner) {
-        bottles[_sku].state = BottleState.Shipped;
-        emit BottleShipped(_sku);
+    function shipBottle(uint _upc) public
+    bottleExists(_upc)
+    verifyBottleState(_upc, BottleState.Sold)
+    verifyCallerIs(bottles[_upc].owner) {
+        bottles[_upc].state = BottleState.Shipped;
+        emit BottleShipped(_upc);
     }
 
-    function receiveBottle(uint _sku) public
-    bottleExists(_sku)
-    verifyBottleState(_sku, BottleState.Shipped)
-    verifyCallerIs(bottles[_sku].buyer) {
-        bottles[_sku].owner = bottles[_sku].buyer;
-        bottles[_sku].buyer = 0;
-        bottles[_sku].state = BottleState.Owned;
-        emit BottleOwned(_sku);
+    function receiveBottle(uint _upc) public
+    bottleExists(_upc)
+    verifyBottleState(_upc, BottleState.Shipped)
+    verifyCallerIs(bottles[_upc].buyer) {
+        bottles[_upc].owner = bottles[_upc].buyer;
+        bottles[_upc].buyer = 0;
+        bottles[_upc].state = BottleState.Owned;
+        emit BottleOwned(_upc);
     }
 
-    function consumeBottle(uint _sku) public
-    bottleExists(_sku)
-    verifyBottleState(_sku, BottleState.Owned)
-    verifyCallerIs(bottles[_sku].owner) {
-        bottles[_sku].state = BottleState.Consumed;
-        emit BottleConsumed(_sku);
+    function consumeBottle(uint _upc) public
+    bottleExists(_upc)
+    verifyBottleState(_upc, BottleState.Owned)
+    verifyCallerIs(bottles[_upc].owner) {
+        bottles[_upc].state = BottleState.Consumed;
+        emit BottleConsumed(_upc);
     }
 
-    function getBottle(uint _sku) public view
-    bottleExists(_sku)
-    returns (uint sku, uint price, address owner, address buyer, string state, uint grapeId) {
-        sku = _sku;
-        price = bottles[_sku].price;
-        owner = bottles[_sku].owner;
-        buyer = bottles[_sku].buyer;
-        grapeId = bottles[_sku].grape.grapeId;
+    function getBottle(uint _upc) public view
+    bottleExists(_upc)
+    returns (uint upc, uint sku, uint productId, uint price, address owner, address buyer, string state, uint grapeId) {
+        upc = _upc;
+        price = bottles[_upc].price;
+        owner = bottles[_upc].owner;
+        buyer = bottles[_upc].buyer;
+        grapeId = bottles[_upc].grape.grapeId;
 
-        if(uint(bottles[_sku].state) == 0) {
+        if(uint(bottles[_upc].state) == 0) {
             state = "Owned";
         }
-        if(uint(bottles[_sku].state) == 1) {
+        if(uint(bottles[_upc].state) == 1) {
             state = "For Sale";
         }
-        if(uint(bottles[_sku].state) == 2) {
+        if(uint(bottles[_upc].state) == 2) {
             state = "Sold";
         }
-        if(uint(bottles[_sku].state) == 3) {
+        if(uint(bottles[_upc].state) == 3) {
             state = "Shipped";
         }
-        if(uint(bottles[_sku].state) == 4) {
+        if(uint(bottles[_upc].state) == 4) {
             state = "Consumed";
         }
     }
