@@ -6,15 +6,19 @@ contract Wine {
     uint lastBottleId;
     uint lastFarmId;
 
+    // Location will be simple value object, that encapsulates location related info
     struct Location {
         string longitude;
         string latitude;
         string name;
     }
 
+    // We are in wine business, so we have the Farm
     struct Farm {
         uint farmId;
         string name;
+        address owner;
+        string farmDescription;
         Location location;
     }
     mapping (uint => Farm) farms;
@@ -60,8 +64,13 @@ contract Wine {
         _;
     }
 
+    modifier farmExists(uint _farmId) {
+        require(farms[_farmId].farmId > 0, "Farm with this id does not exist.");
+        _;
+    }
+
     modifier grapeExists(uint _grapeId) {
-        require(grapes[_grapeId].grapeId > 0, "Bottle can not be created from the grape that does not exist.");
+        require(grapes[_grapeId].grapeId > 0, "Grape with this id does not exists.");
         _;
     }
 
@@ -105,12 +114,28 @@ contract Wine {
     }
 
     // Farm Transactions
-    function registerFarm(string _farmName, string _locationName, string _locationLong, string _locationLat) public
+    function registerFarm(string _farmName, string _locationName, string _locationLong, string _locationLat, string _farmDescription) public
     {
         lastFarmId = lastFarmId + 1;
         location = Location({name: _locationName, longitude: _locationLong, latitude: _locationLat});
-        farms[lastFarmId] = Farm({farmId: lastFarmId, name: _farmName, location: location});
+        farms[lastFarmId] = Farm(
+            {farmId: lastFarmId,
+            name: _farmName,
+            location: location,
+            owner: msg.sender,
+            farmDescription: _farmDescription});
         emit FarmCreated(lastFarmId);
+    }
+    function getFarm(uint _farmId) public view
+    farmExists(_farmId)
+    returns (uint farmId, string name, string locationName, string longitude, string latidude, address owner, string description){
+        farmId = farms[_farmId].farmId;
+        name = farms[_farmId].name;
+        locationName = farms[_farmId].location.name;
+        longitude = farms[_farmId].location.longitude;
+        latitude = farms[_farmId].location.latitude;
+        owner = farms[_farmId].owner;
+        description = farms[_farmId].description;
     }
 
     // Grapes Transactions
