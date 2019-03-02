@@ -31,6 +31,7 @@ contract Wine {
         string name;
         uint vintageYear;
         address owner;
+        string notes;
         GrapeState state;
         Farm farm;
     }
@@ -150,7 +151,9 @@ contract Wine {
             name: _name,
             vintageYear: _vintageYear,
             owner: msg.sender,
-            state: GrapeState.Harvested});
+            notes: _notes,
+            state: GrapeState.Harvested,
+            farm: farms[farmId]});
         emit GrapeHarvested(lastGrapeId);
     }
 
@@ -172,10 +175,13 @@ contract Wine {
 
     function getGrape(uint _grapeId) public view
     grapeExists(_grapeId)
-    returns (uint grapeId, string name, uint vintageYear, string state){
+    returns (uint grapeId, string name, uint vintageYear, string state, string notes, uint farmId){
         grapeId = _grapeId;
         name = grapes[_grapeId].name;
         vintageYear = grapes[_grapeId].vintageYear;
+        farmId = grapes[_grapeId].farm.farmId;
+        notes = grapes[_grapeId].notes;
+
         if(uint(grapes[_grapeId].state) == 0) {
             state = "Harvested";
         }
