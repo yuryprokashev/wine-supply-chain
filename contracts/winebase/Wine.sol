@@ -168,6 +168,7 @@ contract Wine {
     verifyGrapeState(_grapeId, GrapeState.Fermented)
     verifyCallerIs(grapes[_grapeId].owner)   {
         lastBottleUpc = lastBottleUpc + 1;
+        lastBottleSku = lastBottleSku + 1;
         bottles[lastBottleUpc] = BottleOfWine(
             {grape: grapes[_grapeId],
             upc: lastBottleUpc,
