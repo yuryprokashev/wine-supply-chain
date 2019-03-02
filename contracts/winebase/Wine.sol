@@ -18,6 +18,7 @@ contract Wine {
         uint farmId;
         string name;
         address owner;
+        string farmDescription;
         Location location;
     }
     mapping (uint => Farm) farms;
@@ -113,22 +114,28 @@ contract Wine {
     }
 
     // Farm Transactions
-    function registerFarm(string _farmName, string _locationName, string _locationLong, string _locationLat) public
+    function registerFarm(string _farmName, string _locationName, string _locationLong, string _locationLat, string _farmDescription) public
     {
         lastFarmId = lastFarmId + 1;
         location = Location({name: _locationName, longitude: _locationLong, latitude: _locationLat});
-        farms[lastFarmId] = Farm({farmId: lastFarmId, name: _farmName, location: location, owner: msg.sender});
+        farms[lastFarmId] = Farm(
+            {farmId: lastFarmId,
+            name: _farmName,
+            location: location,
+            owner: msg.sender,
+            farmDescription: _farmDescription});
         emit FarmCreated(lastFarmId);
     }
     function getFarm(uint _farmId) public view
     farmExists(_farmId)
-    returns (uint farmId, string name, string locationName, string longitude, string latidude, address owner){
+    returns (uint farmId, string name, string locationName, string longitude, string latidude, address owner, string description){
         farmId = farms[_farmId].farmId;
         name = farms[_farmId].name;
         locationName = farms[_farmId].location.name;
         longitude = farms[_farmId].location.longitude;
         latitude = farms[_farmId].location.latitude;
         owner = farms[_farmId].owner;
+        description = farms[_farmId].description;
     }
 
     // Grapes Transactions
