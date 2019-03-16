@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.5.0;
 
 contract Wine {
     address contractOwner;
@@ -18,19 +18,19 @@ contract Wine {
     struct Farm {
         uint farmId;
         string name;
-        address owner;
-        string farmDescription;
+        address payable owner;
+        string description;
         Location location;
     }
     mapping (uint => Farm) farms;
-    event FarmCreated(uint farmId);
+    event FarmRegistered(uint farmId);
 
     enum GrapeState {Harvested, Pressed, Fermented}
     struct WineGrape {
         uint grapeId; // id of the Wine Grape vintage
         string name;
         uint vintageYear;
-        address owner;
+        address payable owner;
         string notes;
         GrapeState state;
         Farm farm;
@@ -48,8 +48,8 @@ contract Wine {
         WineGrape grape;
         uint price;
         BottleState state;
-        address buyer;
-        address owner; // it will replace odd seller and buyer properties of the Bottle
+        address payable buyer;
+        address payable owner; // it will replace odd seller and buyer properties of the Bottle
     }
     mapping (uint => BottleOfWine) bottles;
     event BottleOwned(uint upc);
@@ -74,7 +74,7 @@ contract Wine {
     }
 
     modifier grapeExists(uint _grapeId) {
-        require(grapes[_grapeId].grapeId > 0, "Grape with this id does not exists.");
+        require(grapes[_grapeId].grapeId > 0, "Grape with this id does not exist.");
         _;
     }
 
@@ -84,7 +84,7 @@ contract Wine {
     }
 
     modifier bottleExists(uint _upc) {
-        require(bottles[_upc].upc > 0, "Bottle with given UPC does not exists.");
+        require(bottles[_upc].upc > 0, "Bottle with given UPC does not exist.");
         _;
     }
 
@@ -118,21 +118,21 @@ contract Wine {
     }
 
     // Farm Transactions
-    function registerFarm(string _farmName, string _locationName, string _locationLong, string _locationLat, string _farmDescription) public
+    function registerFarm(string memory _farmName, string memory _locationName, string memory _locationLong, string memory _locationLat, string memory _farmDescription) public
     {
         lastFarmId = lastFarmId + 1;
-        location = Location({name: _locationName, longitude: _locationLong, latitude: _locationLat});
+        Location memory location = Location({name: _locationName, longitude: _locationLong, latitude: _locationLat});
         farms[lastFarmId] = Farm(
             {farmId: lastFarmId,
             name: _farmName,
             location: location,
             owner: msg.sender,
-            farmDescription: _farmDescription});
-        emit FarmCreated(lastFarmId);
+            description: _farmDescription});
+        emit FarmRegistered(lastFarmId);
     }
     function getFarm(uint _farmId) public view
     farmExists(_farmId)
-    returns (uint farmId, string name, string locationName, string longitude, string latidude, address owner, string description){
+    returns (uint farmId, string memory name, string memory locationName, string memory longitude, string memory latitude, address owner, string memory description){
         farmId = farms[_farmId].farmId;
         name = farms[_farmId].name;
         locationName = farms[_farmId].location.name;
@@ -143,8 +143,8 @@ contract Wine {
     }
 
     // Grapes Transactions
-    function harvestGrape(string _name, uint _vintageYear, string notes, uint farmId) public
-    verifyCallerIs(contractOwner) {
+    function harvestGrape(string memory _name, uint _vintageYear, string memory _notes, uint _farmId) public
+    verifyCallerIs(farms[_farmId].owner) {
         lastGrapeId = lastGrapeId + 1;
         grapes[lastGrapeId] = WineGrape(
             {grapeId: lastGrapeId,
@@ -153,7 +153,7 @@ contract Wine {
             owner: msg.sender,
             notes: _notes,
             state: GrapeState.Harvested,
-            farm: farms[farmId]});
+            farm: farms[_farmId]});
         emit GrapeHarvested(lastGrapeId);
     }
 
@@ -175,12 +175,13 @@ contract Wine {
 
     function getGrape(uint _grapeId) public view
     grapeExists(_grapeId)
-    returns (uint grapeId, string name, uint vintageYear, string state, string notes, uint farmId){
+    returns (uint grapeId, string memory name, uint vintageYear, string memory state, string memory notes, uint farmId, address owner){
         grapeId = _grapeId;
         name = grapes[_grapeId].name;
         vintageYear = grapes[_grapeId].vintageYear;
         farmId = grapes[_grapeId].farm.farmId;
         notes = grapes[_grapeId].notes;
+        owner = grapes[_grapeId].owner;
 
         if(uint(grapes[_grapeId].state) == 0) {
             state = "Harvested";
@@ -208,7 +209,7 @@ contract Wine {
             price: 0,
             state: BottleState.Owned,
             owner: msg.sender,
-            buyer: 0}
+            buyer: address(0)}
         );
         emit BottleOwned(bottles[lastBottleUpc].upc);
     }
@@ -248,7 +249,7 @@ contract Wine {
     verifyBottleState(_upc, BottleState.Shipped)
     verifyCallerIs(bottles[_upc].buyer) {
         bottles[_upc].owner = bottles[_upc].buyer;
-        bottles[_upc].buyer = 0;
+        bottles[_upc].buyer = address(0);
         bottles[_upc].state = BottleState.Owned;
         emit BottleOwned(_upc);
     }
@@ -263,8 +264,10 @@ contract Wine {
 
     function getBottle(uint _upc) public view
     bottleExists(_upc)
-    returns (uint upc, uint sku, uint productId, uint price, address owner, address buyer, string state, uint grapeId) {
+    returns (uint upc, uint sku, uint productId, uint price, address owner, address buyer, string memory state, uint grapeId) {
         upc = _upc;
+        sku = bottles[_upc].sku;
+        productId = bottles[_upc].productId;
         price = bottles[_upc].price;
         owner = bottles[_upc].owner;
         buyer = bottles[_upc].buyer;

@@ -76,3 +76,33 @@ I'm going to buy, if I can press this button too? It is important for the Consum
 to know, what happened with the Wine Grape. How long was it fermented, or when it was 
 harvested. But this information is hard to get reliably. And Etherium does not solve this
 problem.
+
+9. The starter code in `SupplyChainTest.js` contains code, that does not work.
+It uses `event.watch`, but it is not longer available.
+```javascript
+// THIS CODE DOES NTO WORK AS OF 02-Mar-2019!!
+
+// Watch the emitted event Harvested()
+var event = supplyChain.Harvested();
+await event.watch((err, res) => {
+    eventEmitted = true
+});
+```
+The correct way to test events with truffle is here: [link](
+https://github.com/trufflesuite/truffle/blob/next/packages/truffle-contract/test/events.js).
+
+10. The code in the `TestSupplyChain.js` does not use `beforeEach`. Instead it calls `SupplyChain.deployed()`
+in every single `it` invocation. It is violation of the DRY in the obvious case, and it teaches
+students who learn this first time a bad practice.
+
+11. The code in the `TestSupplyChain.js` uses the following string as `null` address:
+```javascript
+const emptyAddress = '0x00000000000000000000000000000000000000';
+```
+I use `address(0)` in Smart Contract code to indicate the address, which is zero. It corresponds to
+the following string in JavaScript:
+```javascript
+const emptyAddress = "0x0000000000000000000000000000000000000000";
+```
+As you can probably see, these two strings have difference in two zeros. The first one fails my assertion,
+that buyer address is emptyAddress. The second one does not.
