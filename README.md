@@ -32,8 +32,8 @@
 buyer
 
 ## How to run automated test locally?
-1. Make sure, you have done (1), (2) of this README
-2. Make sure, you have done (3.1), (3.2) of this README
+1. Make sure, you have done (1), (2), (3) of this README
+2. Make sure, you have done (4.1), (4.2) of this README
 3. In project folder open the Terminal and: 
     1. Run tests for Farm:
         ```bash
