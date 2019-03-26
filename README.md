@@ -105,6 +105,10 @@ owner of the bottle, can buy it.
 #### Receive the Bottle
 When the bottle has been shipped to the buyer,
 buyer can confirm the shipment by receiving the bottle.
+> __IMPORTANT!__ After this action, the buyer becomes the owner of the bottle.
+It means, he can perform the actions of the owner: add the bottle for sale, or 
+consume the bottle. It makes the number of hops in the supply chain indefinite and 
+no code shall be added to support a new hop.
 ![Receive the Bottle](./images/Bottle_ReceiveBottle.png)
 ## Diagrams
 ### Activity Diagram
