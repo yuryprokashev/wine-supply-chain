@@ -12,7 +12,7 @@
  *   },
  */
 const HDWalletProvider = require("truffle-hdwallet-provider");
-var mnemonic = "admit pen attend annual slice drum motion void essence stereo cherry spot";
+var mnemonic = "toward mass iron agent cute admit same join move destroy oppose indoor";
 //0x05c143686724a39ba6c5db44ffc1d2e9ce8e4400 - this is default address created from mnemonic above
 //0x62fd352ac07c6135c963d3c032616ea62b9241b4 - rinkeby transaction for 3 ether
 // https://rinkeby.etherscan.io/address/0x533c2dc83c9810e1f1debe92d47eef09e17da836 - contract on rinkeby
@@ -33,10 +33,10 @@ module.exports = {
         },
         rinkeby: {
             provider: function() {
-                return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/7c1980a964a741f5a4d051b488f654ef");
+                return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/1bcd9a3392c54c6eb26187a02a742438");
             },
             network_id: 4,
-            gas: 4500000,
+            gas: 7000000,
             gasPrice: 10000000000
         }
     }

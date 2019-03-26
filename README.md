@@ -23,7 +23,11 @@
     4. Restore accounts in Metamask using the seed phrase of the Ganache CLI.
     You will need at least two accounts: one is for farm/grape/bottle owner, and 
     another one is for bottle buyer.
-5. Run the server, that will serve the contract front-end to your browser.
+5. Compile the contract for the Rinkeby network
+    ```bash
+    truffle compile --network rinkeby
+    ```
+6. Run the server, that will serve the contract front-end to your browser.
     ```bash
     node index.js
     ```
