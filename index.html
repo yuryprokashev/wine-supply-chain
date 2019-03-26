@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fair Trade Wine</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="text-align: center;">Fair Trade Wine</h1>
+        <hr>
+        <p style="text-align: center;">Prove the authenticity of the bottle using the Ethereum blockchain.</p>
+    </div>
+
+    <div id="ftc-harvest">
+        <h2>Register New Farm</h2>
+        <div class="form-group">
+            Farm Name
+            <br>
+            <input type="text" id="farm-name" name="name" value="Yury's Farm"><br>
+            Farm Description
+            <br>
+            <input type="text" id="farm-description" name="description" value="Awesome wine farm in the middle of nowhere"><br>
+            Farm Location Name
+            <br>
+            <input type="text" id="farm-location-name" name="locationName" value="Middle of Nowhere"><br>
+            Farm Location Longitude
+            <br>
+            <input type="text" id="farm-location-longitude" name="locationLongitude" value="-38.239770"><br>
+            Farm Location Latitude
+            <br>
+            <input type="text" id="farm-location-latitude" name="locationLatitude" value="144.341490"><br>
+            <br>
+            <button class="btn-create" id="button" type="button" data-id="1">Register</button>
+        </div>
+        <div class=form-break></div>
+        <divv class="status" id="farm-register-status"></divv>
+
+        <h2>Farm Lifecycle Management</h2>
+        <div class="form-group">
+            Farm Id
+            <br>
+            <input type="number" id="farm-id" name="id" value=1><br>
+            <div class=button-div>
+                <button class="btn-read" id="button" type="button" data-id="2">Find Farm</button>
+            </div>
+        </div>
+        <h3>Farm Details</h3>
+        <div class="status" id="farm-search-status"></div>
+        <div id="farm-details"></div>
+        <div class=form-break></div>
+
+        <h2>Harvest New Grape</h2>
+        <div class="form-group">
+            Farm Id
+            <br>
+            <input type="text" id="grape-farmId" name="farmId" value="1" size="50"><br>
+            Grape Name
+            <br>
+            <input type="text" id="grape-name" name="name" value="Zinfandel"><br>
+            Grape Vintage Year
+            <br>
+            <input type="text" id="grape-vintageYear" name="vintageYear" value="2019"><br>
+            Grape Notes
+            <br>
+            <input type="text" id="grape-notes" name="notes"
+                   value="There was awesome weather in the Middle of Nowhere, so the grape has marvelous taste!"><br>
+            <button class="btn-create" id="button" type="button" data-id="3">Harvest</button>
+        </div>
+        <div class=form-break></div>
+        <div class="status" id="grape-register-status"></div>
+
+        <h2>Grape Lifecycle Management</h2>
+        <div class="form-group">
+            Grape Id
+            <br>
+            <input type="number" id="grape-id" name="id" value=1><br>
+            <div class=button-div>
+                <button class="btn-read" id="button" type="button" data-id="6">Find</button>
+                <button class="btn-update" id="button" type="button" data-id="4">Press</button>
+                <button class="btn-update" id="button" type="button" data-id="5">Ferment</button>
+            </div>
+        </div>
+        <div class="status" id="grape-update-status"></div>
+        <h3>Grape Details</h3>
+        <div id="grape-details"></div>
+        <h4>Grape Farm Details</h4>
+        <div class="status" id="grape-search-status"></div>
+        <div id="grape-farm-details"></div>
+        <div class=form-break></div>
+
+        <h2>Bottle Owner Console</h2>
+        <h3>Create New Bottle</h3>
+        <div class="form-group">
+            Grape Id
+            <br>
+            <input type="text" id="bottle-grapeId" name="grapeId" value="" size="50"><br>
+
+            <div class=button-div>
+                <button class="btn-create" id="button" type="button" data-id="7">Create</button>
+            </div>
+        </div>
+        <div class=form-break></div>
+        <div class="status" id="create-bottle-status"></div>
+
+        <h3>Find Bottle</h3>
+        <div class="form-group">
+            Bottle UPC
+            <br>
+            <input type="text" id="owner-search-bottle-upc" name="upc" value=1><br>
+            <button class="btn-read" id="button" type="button" data-id="13">Find</button>
+        </div>
+        <div class="status" id="owner-search-bottle-status"></div>
+        <h3>Bottle Details</h3>
+        <div id="owner-bottle-details"></div>
+        <h4>Bottle Grape Details</h4>
+        <div id="owner-bottle-grape-details"></div>
+        <h4>Bottle Farm Details</h4>
+        <div id="owner-bottle-farm-details"></div>
+        <div class=form-break></div>
+
+        <h3>Sell Bottle</h3>
+        <div class="form-group">
+            Bottle UPC
+            <br>
+            <input type="number" id="owner-sell-bottle-upc" name="upc" value=1><br>
+            Bottle Price
+            <br>
+            <input type="text" id="owner-sell-bottle-price" name="price" value=10><br>
+            <button class="btn-update" id="button" type="button" data-id="8">Sell</button>
+        </div>
+        <div class="status" id="owner-sell-bottle-status"></div>
+        <div class=form-break></div>
+
+        <h3>Manage Bottle</h3>
+        <div class="form-group">
+            Bottle UPC
+            <br>
+            <input type="number" id="owner-manage-bottle-upc" name="upc" value=1><br>
+            Bottle Price
+            <br>
+            <button class="btn-update" id="button" type="button" data-id="10">Ship</button>
+            <button class="btn-update" id="button" type="button" data-id="12">Consume</button>
+        </div>
+        <div class="status" id="owner-manage-bottle-status"></div>
+        <div class=form-break></div>
+
+        <h2>Bottle Buyer Console</h2>
+        <h3>Find Bottle</h3>
+        <div class="form-group">
+            Bottle UPC
+            <br>
+            <input type="text" id="buyer-search-bottle-upc" name="grapeId" value="" size="50"><br>
+            <div class=button-div>
+                <button class="btn-read" id="button" type="button" data-id="14">Find</button>
+            </div>
+        </div>
+        <div class="status" id="buyer-search-bottle-status"></div>
+        <h3>Bottle Details</h3>
+        <div id="buyer-bottle-details"></div>
+        <h4>Bottle Grape Details</h4>
+        <div id="buyer-bottle-grape-details"></div>
+        <h4>Bottle Farm Details</h4>
+        <div id="buyer-bottle-farm-details"></div>
+        <div class=form-break></div>
+
+        <h3>Buy Bottle</h3>
+        <div class="form-group">
+            Bottle UPC
+            <br>
+            <input type="text" id="buyer-buy-bottle-upc" name="upc" value="" size="50"><br>
+            Buyer's Bid
+            <br>
+            <input type="text" id="buyer-bid" name="bid" value="" size="50"><br>
+            <div class=button-div>
+                <button class="btn-update" id="button" type="button" data-id="9">Buy</button>
+            </div>
+        </div>
+        <div class="status" id="buy-bottle-status"></div>
+        <div class=form-break></div>
+
+        <h3>Receive Bottle</h3>
+        <div class="form-group">
+            Bottle UPC
+            <br>
+            <input type="text" id="buyer-receive-bottle-upc" name="grapeId" value="" size="50"><br>
+            <div class=button-div>
+                <button class="btn-update" id="button" type="button" data-id="11">Receive</button>
+            </div>
+        </div>
+        <div class="status" id="buyer-receive-bottle-status"></div>
+        <hr>
+    </div>
+
+    <h2>Transaction History<span id="ftc-history"></span></h2>
+    <div>
+        <ul id="ftc-events">
+            <!-- Events will appear here from app.js -->
+        </ul>
+        <br>
+        <hr>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- <script src="js/web3.min.js"></script> -->
+    <script src="src/js/truffle-contract.js"></script>
+    <script src="src/js/app.js"></script>
+</body>
+
+</html>
