@@ -37,15 +37,15 @@ buyer
 3. In project folder open the Terminal and: 
     1. Run tests for Farm:
         ```bash
-        truffle test test/FarmTest.js
+        truffle test test/FarmTest.js --network development_cli
         ```
     2. Run tests for Grape:
         ```bash
-        truffle test test/GrapeTest.js
+        truffle test test/GrapeTest.js --network development_cli
         ```
     3. Run tests for Bottle:
         ```bash
-        truffle test test/BottleTest.js
+        truffle test test/BottleTest.js --network development_cli
         ```
 > __IMPORTANT!__ Please, run the tests individually, as described
 above. If you execute `truffle test`, then tests for the Grape will
