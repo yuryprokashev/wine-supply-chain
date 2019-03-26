@@ -6,7 +6,7 @@
 ## How to run?
 1. Download this project and unzip it.
 2. Go to project folder and open Terminal.
-3. If you want to run on local machine optional, continue to 4, if you want to use Rinkeby deployment):
+3. If you want to run on local machine (optional, continue to 4, if you want to use Rinkeby deployment):
     1. [Download and install Ganache CLI.](https://github.com/trufflesuite/ganache-cli)
     2. Run Ganache CLI and remember the seed phrase.
         ```bash
@@ -74,7 +74,8 @@ Farm, where the Grape had been harvested.
 ![Get the Bottle](./images/Bottle_GetBottle.png)
 ### Farm/Grape Owner
 #### Harvest the new Grape
-The farmer can harvest the Grape from his farm.
+The farm owner can harvest the Grape from the farm he/she owns.
+Farm owner becomes the owner of the harvested Grape.
 ![Harvest the Grape](./images/Grape_HarvestGrape.png)
 #### Press the Grape
 After the Grape is harvested, the owner of the Grape
