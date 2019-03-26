@@ -6,7 +6,11 @@
 ## How to run?
 1. Download this project and unzip it.
 2. Go to project folder and open Terminal.
-3. If you want to run on local machine (optional, continue to 4, if you want to use Rinkeby deployment):
+3. Install the project dependencies 
+    ```bash
+    npm install
+    ```
+4. If you want to run on local machine (optional, continue to 5 if you want to use Rinkeby deployment):
     1. [Download and install Ganache CLI.](https://github.com/trufflesuite/ganache-cli)
     2. Run Ganache CLI and remember the seed phrase.
         ```bash
@@ -19,10 +23,6 @@
     4. Restore accounts in Metamask using the seed phrase of the Ganache CLI.
     You will need at least two accounts: one is for farm/grape/bottle owner, and 
     another one is for bottle buyer.
-4. Install the project dependencies 
-    ```bash
-    npm install
-    ```
 5. Run the server, that will serve the contract front-end to your browser.
     ```bash
     node index.js
@@ -32,8 +32,8 @@
 buyer
 
 ## How to run automated test locally?
-1. Make sure, you have done (1), (2) of this README
-2. Make sure, you have done (3.1), (3.2) of this README
+1. Make sure, you have done (1), (2), (3) of this README
+2. Make sure, you have done (4.1), (4.2) of this README
 3. In project folder open the Terminal and: 
     1. Run tests for Farm:
         ```bash
