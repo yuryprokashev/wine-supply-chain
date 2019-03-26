@@ -109,6 +109,7 @@ buyer can confirm the shipment by receiving the bottle.
 It means, he can perform the actions of the owner: add the bottle for sale, or 
 consume the bottle. It makes the number of hops in the supply chain indefinite and 
 no code shall be added to support a new hop.
+
 ![Receive the Bottle](./images/Bottle_ReceiveBottle.png)
 ## Diagrams
 ### Activity Diagram
