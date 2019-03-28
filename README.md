@@ -120,8 +120,16 @@ no code shall be added to support a new hop.
 ![State Diagram](./images/Wine%20Process%20-%20Copy%20of%20State%20Diagram.jpeg)
 ### Class Diagram
 ![Class Diagram](./images/Wine%20Process%20-%20Class%20Diagram.jpeg)
-## Libraries
+## Libraries and Frameworks
+### Node
+The project is built with Node.js 8.9.4
 ### Truffle and Ganache
+`truffle version` output
+```bash
+Truffle v5.0.7 (core: 5.0.7)
+Solidity v0.5.0 (solc-js)
+Node v8.9.4
+```
 Truffle provides the ability to compile and deploy the contract to the
 target network.
 
@@ -129,9 +137,11 @@ Ganache provides ability to run the test Etherium network locally, so it is
 much easier to test the contract and it's front-end during the development.
 
 ### Metamask
+Metamask 6.2.2 version is used for interaction with contract.
 Metamask provides ability to interact the contract deployed to any network using the
 browser plugin.
 ### Express
+Express 4.16.4 version is used
 Express provides the ability to serve the contract front-end to the 
 end-user browser.
 
