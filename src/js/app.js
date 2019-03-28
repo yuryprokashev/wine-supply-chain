@@ -146,8 +146,10 @@ var App = {
             App.contracts.SupplyChain.setProvider(App.web3Provider);
             console.log(App.web3.version);
             if(App.web3.version.network === "4") {
+                console.log("Rinkeby network detected");
                 App.contracts.SupplyChain.at(App.contractAddressAtRinkeby);
             } else {
+                console.log("Local network detected");
                 App.contracts.SupplyChain.at(App.contractAddressAtLocalNetwork);
             }
             App.fetchEvents();
